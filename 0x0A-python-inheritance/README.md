@@ -17,3 +17,6 @@ At the end of this project, you are expected to be able to explain to anyone, wi
 - Which attributes or methods are available by heritage to subclasses
 - What is the purpose of inheritance
 - What are, when and how to use isinstance, issubclass, type and super built-in functions
+
+
+ALX PROJECTS
