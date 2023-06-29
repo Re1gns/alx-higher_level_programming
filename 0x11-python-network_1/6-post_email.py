@@ -2,19 +2,14 @@
 """A script that:
 - takes in a URL,
 - sends a request to the URL and displays the value
-- of the X-Request-Id variable found in the header ofthe response.
+- of the X-Request-Id variable found in the header of the response.
 """
-import requests
 import sys
+import request
 
-if len(sys.argv) < 3:
-    print("Please provide a URL and an email address.")
-    sys.exit(1)
+if __name__ == "__main__":
+    url = sys.argv[1]
 
-url = sys.argv[1]
-email = sys.argv[2]
-
-response = requests.post(url, data={'email': email})
-
-print("Response body:")
-print(response.text)
+    request = urllib.request.Request(url)
+    with urllib.request.urlopen(request) as response:
+        print(dict(response.headers).get("X-Request-Id"))
