@@ -15,5 +15,4 @@ email = sys.argv[2]
 response = requests.post(url, data={'email': email})
 
 # Display the response body
-print("Response body:")
 print(response.text)
