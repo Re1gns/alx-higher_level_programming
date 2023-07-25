@@ -1,26 +1,32 @@
-#!/usr/bin/node
+#!/bin/bash
 
-const request = require('request');
-const url = process.argv[2];
+# Check if the URL argument is provided
+if [ -z "$1" ]; then
+  echo "Please provide the API URL as an argument."
+  exit 1
+fi
 
-request(url, function (err, response, body) {
-  if (err) {
-    console.log(err);
-  } else if (response.statusCode === 200) {
-    const completed = {};
-    const tasks = JSON.parse(body);
-    for (const i in tasks) {
-      const task = tasks[i];
-      if (task.completed === true) {
-        if (completed[task.userId] === undefined) {
-          completed[task.userId] = 1;
-        } else {
-          completed[task.userId]++;
-        }
-      }
-    }
-    console.log(completed);
-  } else {
-    console.log('An error occured. Status code: ' + response.statusCode);
-  }
-});
+# Make the request and process the response
+request_output=$(curl -s "$1")
+completed_users=()
+
+# Loop through the tasks
+while IFS= read -r task; do
+  completed=$(echo "$task" | jq -r '.completed')
+  if [ "$completed" = "true" ]; then
+    userId=$(echo "$task" | jq -r '.userId')
+    completed_users+=("$userId")
+  fi
+done <<< "$request_output"
+
+# Calculate the number of completed tasks by user id
+declare -A completed_counts
+for user_id in "${completed_users[@]}"; do
+  ((completed_counts["$user_id"]++))
+done
+
+# Print users with completed tasks
+for user_id in "${!completed_counts[@]}"; do
+  completed_count=${completed_counts["$user_id"]}
+  echo "User $user_id completed $completed_count tasks."
+done
