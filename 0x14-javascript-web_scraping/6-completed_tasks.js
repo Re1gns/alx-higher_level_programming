@@ -19,8 +19,8 @@ request(url, function (err, response, body) {
         }
       }
     }
-    console.log(JSON.stringify(completed)); // Add this line to print the output on one line
-  } else {
-    console.log('An error occurred. Status code: ' + response.statusCode);
+    console.log(completed);
+      } else {
+    console.log('An error occured. Status code: ' + response.statusCode);
   }
 });
